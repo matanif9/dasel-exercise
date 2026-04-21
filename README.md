@@ -157,3 +157,13 @@ the full document after modification, and selectors without a leading dot (e.g. 
   modifies only `parsing/yaml/yaml.go` and `parsing/yaml/yaml_reader.go`.
 - `wolfi-base` is used as a minimal base to provide a working system environment. The
   `dasel` binary itself is statically linked and has no runtime dependencies.
+
+## Future Enhancements
+
+**Full CI/CD Automation**: Instead of manually executing build commands, I would implement an automated pipeline (e.g., using Jenkins or GitHub Actions). This pipeline would trigger on every code push, build the container images using Melange and apko, execute the test suite (test.sh), and upon success, push the final image to a centralized Container Registry.
+
+**Automated Vulnerability Scanning**: While the specific CVE was patched in this assignment, ensuring continuous security is critical. I would integrate automated scanning tools into the pipeline to inspect the image post-build. This ensures a "Zero-CVE" baseline by identifying any known vulnerabilities before the image reaches production.
+
+**Built-in Multi-Architecture Support**: Currently, the target architecture (e.g., amd64 or arm64) must be specified manually during the build process. I would enhance the configuration to support concurrent cross-compilation for all major architectures. This would result in a multi-arch manifest, allowing users to pull the image and automatically receive the version compatible with their hardware.
+
+**AI-Powered Remediation**: I would integrate an AI agent into the development workflow to monitor for new vulnerability reports. The AI could analyze the source code, automatically generate the required security patches, and open a Pull Request to update the build configuration, significantly reducing the time-to-fix.
