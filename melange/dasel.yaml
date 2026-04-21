@@ -1,0 +1,58 @@
+package:
+  name: dasel
+  version: 3.3.1
+  epoch: 0
+  description: "Select, put and delete data from JSON, TOML, YAML, XML, INI, HCL and CSV files with a single tool"
+  copyright:
+    - license: MIT
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - wolfi-base
+      - go
+      - git
+      - patch
+      - ca-certificates-bundle
+      - busybox
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/TomWright/dasel
+      tag: v3.3.1
+      expected-commit: fba653c7f248aff10f2b89fca93929b64707dfc8
+
+  - runs: |
+      patch -p1 < /home/build/patches/fix-cve-2026-33320.patch
+
+  - runs: |
+      go build -ldflags="-s -w" -o dasel ./cmd/dasel
+      mkdir -p "${{targets.destdir}}"/usr/bin
+      install -m755 dasel "${{targets.destdir}}"/usr/bin/dasel
+
+test:
+  environment:
+    contents:
+      repositories:
+        - https://packages.wolfi.dev/os
+        - "@local /work/packages"
+      keyring:
+        - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+        - /work/melange.rsa.pub
+      packages:
+        - busybox
+        - dasel
+  pipeline:
+    - name: "Verify binary is runnable"
+      runs: |
+        /usr/bin/dasel version
+    - name: "Test JSON querying"
+      runs: |
+        OUTPUT=$(echo '{"name":"Tom"}' | /usr/bin/dasel -i json 'name')
+        echo "$OUTPUT" | grep -q "Tom" || { echo "FAIL: JSON query returned: $OUTPUT"; exit 1; }
+        echo "PASS: JSON query returned Tom"

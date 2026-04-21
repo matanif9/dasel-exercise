@@ -1,0 +1,28 @@
+contents:
+  repositories:
+    - https://packages.wolfi.dev/os
+    - "@local /work/packages"
+  keyring:
+    - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    - /work/melange.rsa.pub
+  packages:
+    - wolfi-base
+    - dasel@local
+
+entrypoint:
+  command: /usr/bin/dasel
+
+archs:
+  - x86_64
+
+environment:
+  PATH: /usr/sbin:/sbin:/usr/bin:/bin
+
+accounts:
+  run-as: 65532
+  users:
+    - username: nonroot
+      uid: 65532
+  groups:
+    - groupname: nonroot
+      gid: 65532
