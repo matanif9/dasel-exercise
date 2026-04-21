@@ -150,14 +150,6 @@ The test script verifies:
 Note: dasel v3 changed the CLI — use `-i` (not `-r`) for input format, `--root` to output
 the full document after modification, and selectors without a leading dot (e.g. `name` not `.name`).
 
-## Assumptions
-
-- Target architecture is `amd64`. See the Platform Notes section above for arm64/Mac changes.
-- The CVE fix patch is a faithful backport of the changes from v3.3.2 (PR #531). It
-  modifies only `parsing/yaml/yaml.go` and `parsing/yaml/yaml_reader.go`.
-- `wolfi-base` is used as a minimal base to provide a working system environment. The
-  `dasel` binary itself is statically linked and has no runtime dependencies.
-
 ## Future Enhancements
 
 **Full CI/CD Automation**: Instead of manually executing build commands, I would implement an automated pipeline (e.g., using Jenkins or GitHub Actions). This pipeline would trigger on every code push, build the container images using Melange and apko, execute the test suite (test.sh), and upon success, push the final image to a centralized Container Registry.
