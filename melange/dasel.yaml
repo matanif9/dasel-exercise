@@ -40,7 +40,7 @@ test:
     contents:
       repositories:
         - https://packages.wolfi.dev/os
-        - "@local /work/packages"
+        - /work/packages
       keyring:
         - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
         - /work/melange.rsa.pub
